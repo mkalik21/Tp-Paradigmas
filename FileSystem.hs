@@ -28,25 +28,20 @@ agregarAnuncioF anuncio (FS fsDpts fsAnuncios)
   | otherwise = FS fsDpts fsAnuncios
 
 
-sacarAnuncioF anuncioN (FS departamentos anuncios) = FS departamentos (filter (/= anuncioN) anuncios)
+sacarAnuncioF anuncioNuevo (FS departamentos anuncios) = FS departamentos (filter (/= anuncioNuevo) anuncios)
 
 agregarDepartamentoF departamento (FS fsDpts fsAnuncios)
     | departamento `elem` fsDpts = FS fsDpts fsAnuncios  
     | otherwise = FS (departamento : fsDpts) fsAnuncios  
 
 
-sacarDepartamentoF departamentoN (FS departamentos anuncios) = FS (filter (/= departamentoN) departamentos) anuncios
-{-
-anunciosParaF departamentos (FS [Departamento] [Anuncio]) = | --Comparar departamentos ingresados con [Departamento] (en FS)
-                                                            | --Si hay alguno que coincida, nada
-                                                            | --Si no, eliminarlo de la lista de departamentos
-                                                            | --Recorrer los anuncios y ver si algun departamento del anuncio coincide con alguno de la lista.
-                                                            | --Si coincide, agregarlo a una lista usando pattern matching.
--}
-anunciosParaF deps (FS fsDeps fsAnuncios) = filtrarAnuncios fsAnuncios depsFiltrados
+sacarDepartamentoF departamentoNuevo (FS departamentos anuncios) = FS (filter (/= departamentoNuevo) departamentos) anuncios
+
+
+anunciosParaF dpts (FS fsDpts fsAnuncios) = filtrarAnuncios fsAnuncios depsFiltrados
   where
     -- Filtramos los departamentos, eliminando aquellos que no existen en el FileSystem
-    depsFiltrados = [d | d <- deps, d `elem` fsDeps]
+    depsFiltrados = [d | d <- dpts, d `elem` fsDpts]
 
     -- Filtramos los anuncios donde alguno de sus departamentos coincida con los departamentos filtrados
     filtrarAnuncios :: [Anuncio] -> [Departamento] -> [Anuncio]
@@ -54,6 +49,3 @@ anunciosParaF deps (FS fsDeps fsAnuncios) = filtrarAnuncios fsAnuncios depsFiltr
     filtrarAnuncios (a:as) ds
       | any (`elem` ds) (departamentosA a) = a : filtrarAnuncios as ds
       | otherwise = filtrarAnuncios as ds
-
-fs = nuevoF
-fs2 = agregarDepartamentoF "Departamento1" fs

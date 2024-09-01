@@ -17,6 +17,7 @@ showP :: Prompter -> Anuncio                           -- muestra el anuncio act
 avanzarP :: Prompter -> Prompter                       -- pasa al siguiente anuncio
 duracionP :: Prompter -> Duracion                      -- indica la duracion total de los anuncios configurados  
 
+
 nuevoP filesystem = Pro filesystem (departamentosF filesystem) 1
 
 archivosP (Pro fs _ _)  = fs
@@ -24,10 +25,10 @@ archivosP (Pro fs _ _)  = fs
 departamentosP (Pro _ departamento _) = departamento
 
 
-configurarP (Pro fs prompterDpts _) dptsUsuario =
+configurarP (Pro fs prompterDpts _) dptsIngresados =
     let
         -- Filtramos la lista de departamentos ingresada para que solo contenga los que están en el FileSystem
-        dptsFiltrados = filter (`elem` departamentosF fs) dptsUsuario
+        dptsFiltrados = filter (`elem` departamentosF fs) dptsIngresados
 
         -- Filtramos los anuncios del FileSystem que corresponden a los departamentos filtrados
         anunciosValidos = filter (any (`elem` dptsFiltrados) . departamentosA) (anunciosF fs)
@@ -66,14 +67,3 @@ avanzarP (Pro fs dpts index) =
 -- Calcula la duración total de los anuncios filtrados
 
 duracionP (Pro fs dpts _) = sum $ map duracionA (anunciosFiltrados fs dpts)
-
-{- 
-Comparamos la lista de departamentos que ingresa el usuario con la lista de departamentos que tiene el prompter
-Eliminamos (de la lista de dpts ingresada) todos los dpts que no se encuentren en el prompter
-Con la nueva lista que unicamente tiene los dpts que se encuentran en el filesystem, recorremos los anuncios para ver si alguno corresponde con algun dpto de la lista
-Si corresponde con un dpto de la lista, lo agrego a una nueva lista y borro ese anuncio del filesystem
-Una vez que recorri todos los anuncios, calculo el largo de la nueva lista de anuncios y agrego la lista entera al principio del filesystem, dejando los no usados al final.
-Una vez hecho esto, le paso el filesystem ordenado al prompter
-Empiezo a mostrar los anuncios desde el principio, y voy avanzando de a uno 
-Una vez que llego al largo de la lista, dejo de mostrar y muestro un msj de "Ese es el final de los anuncios"
--}

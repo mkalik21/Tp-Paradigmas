@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Player {
     private final int id;
-    private final List<Card> cartas; // List of Card objects
+    private final List<Card> cartas;
     private int fichas;
 
     public Player(int id) {
@@ -40,8 +40,8 @@ public class Player {
         fichas += cantidad;
     }
 
-    public List<Card> getCartas() { // Returns unmodifiable list of Cards
-        return Collections.unmodifiableList(cartas);
+    public List<Card> getCartas() {
+        return new ArrayList<>(cartas);
     }
 
     public int calcularPuntaje() {

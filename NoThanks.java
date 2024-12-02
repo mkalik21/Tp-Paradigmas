@@ -1,50 +1,42 @@
 package GameNT;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class NoThanks {
     final List<Player> jugadores;
-    final Queue<Card> deck;
+    final Set<Card> deck;
     int jugadorTurno;
     int fichasSobreCarta;
 
     public NoThanks(int cantidadJugadores) {
-        this.jugadores = new ArrayList<>();
-        IntStream.range(0, cantidadJugadores)
+        this.jugadores = IntStream.range(0, cantidadJugadores)
                 .mapToObj(i -> new Player(i + 1))
-                .forEach(jugadores::add);
+                .collect(Collectors.toList());
 
-        this.deck = new LinkedList<>();
+        this.deck = new TreeSet<>(Comparator.comparingInt(Card::getValue));
         this.jugadorTurno = 0;
         this.fichasSobreCarta = 0;
     }
 
     public void iniciarCartas(int[] cartas) {
-        // Check for invalid card values
         Arrays.stream(cartas)
-                .filter(carta -> carta <= 0)  // Validate that the card values are greater than zero
-                .findFirst()
-                .ifPresent(c -> {
-                    throw new IllegalArgumentException("Invalid card value");
-                });
-
-        // Initialize the deck with valid cards
-        Arrays.stream(cartas).mapToObj(Card::new).forEach(deck::add);
+                .mapToObj(Card::new)
+                .forEach(deck::add);
     }
-
 
     public void iniciarFichas(int cantidadFichas) {
         jugadores.forEach(j -> j.setFichas(cantidadFichas));
     }
 
     public void jugarTurno(Accion accion) {
-        Optional.ofNullable(deck.peek())  // Peek to check if the deck has cards
-                .orElseThrow(() -> new IllegalStateException("No more actions should be allowed once the deck is empty"));  // Throw exception if empty
+        Optional.ofNullable(deck.isEmpty() ? null : deck.iterator().next())
+                .orElseThrow(() -> new IllegalStateException("No se permiten más acciones una vez que el mazo esta vacío"));
         accion.ejecutar(this);
     }
 
-    public List<Card> getCartasJugador(int idJugador) { // Returns List of Card objects
+    public List<Card> getCartasJugador(int idJugador) {
         return jugadores.get(idJugador - 1).getCartas();
     }
 

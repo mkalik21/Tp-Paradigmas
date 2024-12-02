@@ -1,27 +1,18 @@
 package GameNT;
 
 import org.junit.jupiter.api.Test;
-
 import java.util.Arrays;
 import java.util.stream.Collectors;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class NoThanksTest {
-
-    private NoThanks inicializarJuego(int cantidadJugadores, int[] cartas, int fichasPorJugador) {
-        NoThanks juego = new NoThanks(cantidadJugadores);
-        juego.iniciarCartas(cartas);
-        juego.iniciarFichas(fichasPorJugador);
-        return juego;
-    }
 
     @Test
     public void testDeckInitialization() {
         NoThanks juego = inicializarJuego(3, new int[]{5, 10, 15}, 10);
 
-        assertAll("Deck Initialization",
-                () -> assertEquals(3, juego.deck.size(), "The deck should have the correct number of cards"),
+        assertAll("Mazo inicializado",
+                () -> assertEquals(3, juego.deck.size(), "El mazo debería tener el número correcto de cartas"),
                 () -> juego.deck.stream()
                         .map(Card::getValue)
                         .collect(Collectors.toSet())
@@ -71,9 +62,6 @@ public class NoThanksTest {
         assertEquals(12, juego.getFichasJugador(3));
     }
 
-
-
-
     @Test
     public void testPrimerJugadorPagaSegundoCompra() {
         NoThanks juego = inicializarJuego(3, new int[]{5, 10, 15}, 11);
@@ -109,9 +97,6 @@ public class NoThanksTest {
         assertEquals(-3, juego.calcularPuntaje(3));
     }
 
-
-
-
     @Test
     public void testPagarSinFichas() {
         NoThanks juego = inicializarJuego(3, new int[]{5, 6, 7, 10, 15}, 1);
@@ -133,7 +118,7 @@ public class NoThanksTest {
             juego.iniciarCartas(new int[]{-5, 0, 10});
         });
 
-        assertEquals("Invalid card value", exception.getMessage());
+        assertEquals("Valor invalido de carta", exception.getMessage());
     }
 
     @Test
@@ -166,6 +151,14 @@ public class NoThanksTest {
         assertEquals(2, juego.getFichasSobreCarta(), "Deberían acumularse 2 fichas sobre la carta después de dos pagos");
     }
 
+
+
+    private NoThanks inicializarJuego(int cantidadJugadores, int[] cartas, int fichasPorJugador) {
+        NoThanks juego = new NoThanks(cantidadJugadores);
+        juego.iniciarCartas(cartas);
+        juego.iniciarFichas(fichasPorJugador);
+        return juego;
+    }
 
     private static void comprarTresVecesSeguidas(NoThanks juego) {
         comprarDosVecesSeguidas(juego);

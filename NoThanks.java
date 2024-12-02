@@ -21,7 +21,6 @@ public class NoThanks {
     }
 
     public void iniciarCartas(int[] cartas) {
-
         Arrays.stream(cartas)
                 .mapToObj(Card::new)
                 .forEach(deck::add);
